@@ -1,6 +1,6 @@
 {
   "name": "@drovp/image-optimizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Drovp plugin for perceptually lossless image size optimization.",
   "homepage": "https://github.com/drovp/image-optimizer",
   "bugs": "https://github.com/drovp/image-optimizer/issues",
