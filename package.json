@@ -15,7 +15,14 @@
     "png",
     "gif",
     "webp",
-    "svg"
+    "svg",
+    "mozjpeg",
+    "libwebp",
+    "pngquant",
+    "optipng",
+    "gifsicle",
+    "gif2webp",
+    "svgo"
   ],
   "author": "tomasklaen",
   "license": "MIT",
