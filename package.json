@@ -1,7 +1,7 @@
 {
   "name": "@drovp/image-optimizer",
   "version": "1.0.1",
-  "description": "Drovp plugin for perceptually lossless image size optimization.",
+  "description": "Perceptually lossless image (png, jpg, svg, webp, gif) size optimization.",
   "homepage": "https://github.com/drovp/image-optimizer",
   "bugs": "https://github.com/drovp/image-optimizer/issues",
   "repository": "github:drovp/image-optimizer",
@@ -52,7 +52,6 @@
   },
   "dependencies": {
     "@drovp/save-as-path": "^1.1.2",
-    "detokenizer": "^1.0.2",
     "imagemin": "^8.0.1",
     "imagemin-gif2webp": "^3.0.0",
     "imagemin-gifsicle": "^7.0.0",
