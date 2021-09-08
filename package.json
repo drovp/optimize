@@ -1,6 +1,6 @@
 {
   "name": "@drovp/image-optimizer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Perceptually lossless image (png, jpg, svg, webp, gif) size optimization.",
   "homepage": "https://github.com/drovp/image-optimizer",
   "bugs": "https://github.com/drovp/image-optimizer/issues",
