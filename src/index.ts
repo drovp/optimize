@@ -1,4 +1,4 @@
-import {Plugin, PayloadData, makeOptionsSchema, makeAcceptsFlags} from '@drovp/types';
+import {Plugin, PayloadData, OptionsSchema, makeAcceptsFlags} from '@drovp/types';
 import {makeOptionSchema as makeSavingOptionSchema, Options as SavingOptions} from '@drovp/save-as-path';
 
 /**
@@ -158,7 +158,7 @@ type Options = SavingOptions & {
 };
 
 // Options schema for the Options type above
-const optionsSchema = makeOptionsSchema<Options>()([
+const optionsSchema: OptionsSchema<Options> = [
 	{
 		name: 'encoder',
 		type: 'namespace',
@@ -1032,7 +1032,7 @@ const optionsSchema = makeOptionsSchema<Options>()([
 			},
 		],
 	},
-]);
+];
 
 const acceptsFlags = makeAcceptsFlags<Options>()({
 	files: ['jpg', 'png', 'webp', 'svg', 'gif'],
