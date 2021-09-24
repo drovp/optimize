@@ -107,7 +107,7 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 				if (enabled) plugins.push(name);
 			}
 
-			plugin = require('imagemin-svgo')({plugins});
+			plugin = (await nativeImport('imagemin-svgo')).default({plugins});
 			break;
 		}
 	}
