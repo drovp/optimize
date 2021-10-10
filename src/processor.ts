@@ -1,4 +1,5 @@
 import {promises as FSP} from 'fs';
+import * as Path from 'path';
 import type {ProcessorUtils} from '@drovp/types';
 import {saveAsPath} from '@drovp/save-as-path';
 import type {Payload} from './';
@@ -134,8 +135,13 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 		...options.saving,
 		tokenReplacer: (name) => (name in extraTokens ? extraTokens[name] || '' : undefined),
 	});
+	let destinationDirectory = Path.dirname(destination);
 	const tmpPath = `${destination}.tmp`;
 
+	// Ensure directory exists
+	await FSP.mkdir(destinationDirectory, {recursive: true});
+
+	// Write, cleanup, rename, output
 	await FSP.writeFile(tmpPath, outputBuffer);
 	if (options.saving.deleteOriginal) await FSP.rm(item.path, {force: true});
 	await FSP.rename(tmpPath, destination);
