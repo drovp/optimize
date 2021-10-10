@@ -17,20 +17,20 @@ const encoderExtension = {
 
 export default async (payload: Payload, utils: ProcessorUtils) => {
 	const {item, options} = payload;
-	const {result} = utils;
+	const {output} = utils;
 
 	const encoder = options.encoder[item.type];
 
 	if (!encoder) throw new Error(`Unknown encoder "${encoder}".`);
 
-	const resultExtension = encoderExtension[encoder];
+	const outputExtension = encoderExtension[encoder];
 
 	/**
 	 * Process the file.
 	 */
 
 	const inputBuffer = await FSP.readFile(item.path);
-	let resultBuffer;
+	let outputBuffer;
 	let plugin;
 
 	switch (encoder) {
@@ -113,31 +113,31 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 	}
 
 	const {default: imagemin} = await nativeImport('imagemin');
-	resultBuffer = await imagemin.buffer(inputBuffer, {plugins: [plugin]});
+	outputBuffer = await imagemin.buffer(inputBuffer, {plugins: [plugin]});
 
-	if (!resultBuffer) {
-		console.error(`imagemin didn't produce any result.`);
+	if (!outputBuffer) {
+		console.error(`imagemin didn't produce any output.`);
 		return;
 	}
 
-	if (inputBuffer === resultBuffer) {
+	if (inputBuffer === outputBuffer) {
 		console.error(`imagemin refused to process the file.`);
 		return;
 	}
 
 	/**
-	 * Save the result.
+	 * Save the output.
 	 */
 
 	const extraTokens: Record<string, string> = {encoder};
-	let destination = await saveAsPath(item.path, resultExtension, {
+	let destination = await saveAsPath(item.path, outputExtension, {
 		...options.saving,
-		tokenReplacer: (name) => name in extraTokens ? extraTokens[name] || '' : undefined,
+		tokenReplacer: (name) => (name in extraTokens ? extraTokens[name] || '' : undefined),
 	});
 	const tmpPath = `${destination}.tmp`;
 
-	await FSP.writeFile(tmpPath, resultBuffer);
+	await FSP.writeFile(tmpPath, outputBuffer);
 	if (options.saving.deleteOriginal) await FSP.rm(item.path, {force: true});
 	await FSP.rename(tmpPath, destination);
-	result.file(destination);
+	output.file(destination);
 };
