@@ -43,7 +43,7 @@
     "postversion": "npm-run-all git-push npm-publish"
   },
   "devDependencies": {
-    "@drovp/types": "^2.0.1",
+    "@drovp/types": "^3.0.1",
     "@types/imagemin": "^8.0.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",

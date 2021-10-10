@@ -17,10 +17,10 @@ const encoderExtension = {
 };
 
 export default async (payload: Payload, utils: ProcessorUtils) => {
-	const {item, options} = payload;
+	const {input, options} = payload;
 	const {output} = utils;
 
-	const encoder = options.encoder[item.type];
+	const encoder = options.encoder[input.type];
 
 	if (!encoder) throw new Error(`Unknown encoder "${encoder}".`);
 
@@ -30,7 +30,7 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 	 * Process the file.
 	 */
 
-	const inputBuffer = await FSP.readFile(item.path);
+	const inputBuffer = await FSP.readFile(input.path);
 	let outputBuffer;
 	let plugin;
 
@@ -131,7 +131,7 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 	 */
 
 	const extraTokens: Record<string, string> = {encoder};
-	let destination = await saveAsPath(item.path, outputExtension, {
+	let destination = await saveAsPath(input.path, outputExtension, {
 		...options.saving,
 		tokenReplacer: (name) => (name in extraTokens ? extraTokens[name] || '' : undefined),
 	});
@@ -143,7 +143,7 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 
 	// Write, cleanup, rename, output
 	await FSP.writeFile(tmpPath, outputBuffer);
-	if (options.saving.deleteOriginal) await FSP.rm(item.path, {force: true});
+	if (options.saving.deleteOriginal) await FSP.rm(input.path, {force: true});
 	await FSP.rename(tmpPath, destination);
 	output.file(destination);
 };
