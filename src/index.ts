@@ -5,16 +5,6 @@ import {makeOptionSchema as makeSavingOptionSchema, Options as SavingOptions} fr
  * Helpers.
  */
 
-const encoderDescription = {
-	ignore: `won't be processed.`,
-	mozjpeg: `will be processed with mozjpeg encoder.`,
-	libwebp: `will be processed with libwebp encoder.`,
-	pngquant: `will be processed with pngquant encoder.`,
-	optipng: `will be processed with optipng encoder.`,
-	gifsicle: `will be processed with gifsicle encoder.`,
-	gif2webp: `will be processed with gif2webp encoder and saved as animated <code>.webp</code>.`,
-	svgo: `will be processed with svgo optimizer.`,
-};
 const sizeUnits = ['B', 'KB', 'MB', 'GB', 'TB'];
 
 function formatSize(bytes: number | string) {
@@ -163,6 +153,7 @@ const optionsSchema: OptionsSchema<Options> = [
 		name: 'encoder',
 		type: 'namespace',
 		title: `Optimize with`,
+		description: `Choose which optimizer to use for each input type.`,
 		schema: [
 			{
 				name: 'jpg',
@@ -170,7 +161,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				options: ['mozjpeg', 'libwebp'],
 				default: 'mozjpeg',
 				title: 'JPG',
-				description: (value) => `JPG files ${encoderDescription[value as 'mozjpeg' | 'libwebp']}`,
 			},
 			{
 				name: 'png',
@@ -178,7 +168,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				options: ['pngquant', 'optipng', 'libwebp'],
 				default: 'pngquant',
 				title: 'PNG',
-				description: (value) => `PNG files ${encoderDescription[value as 'pngquant' | 'optipng']}`,
 			},
 			{
 				name: 'gif',
@@ -186,7 +175,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				options: ['gifsicle', 'gif2webp'],
 				default: 'gifsicle',
 				title: 'GIF',
-				description: (value) => `GIF files ${encoderDescription[value as 'gifsicle' | 'gif2webp']}`,
 			},
 			{
 				name: 'webp',
@@ -194,7 +182,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				options: ['libwebp'],
 				default: 'libwebp',
 				title: 'WEBP',
-				description: (value) => `WEBP files ${encoderDescription[value as 'mozjpeg' | 'libwebp']}`,
 			},
 			{
 				name: 'svg',
@@ -202,7 +189,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				options: ['svgo'],
 				default: 'svgo',
 				title: 'SVG',
-				description: (value) => `SVG files ${encoderDescription[value as 'svgo']}`,
 			},
 		],
 	},
@@ -1049,7 +1035,7 @@ export default (plugin: Plugin) => {
 		parallelize: true,
 		options: [
 			makeSavingOptionSchema({
-				extraTokens: {
+				extraVariables: {
 					encoder: `name of the encoder used to compress the file`,
 				},
 			}),

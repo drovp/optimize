@@ -1,7 +1,6 @@
 import {promises as FSP} from 'fs';
-import * as Path from 'path';
 import type {ProcessorUtils} from '@drovp/types';
-import {saveAsPath} from '@drovp/save-as-path';
+import {checkSaveAsPathOptions, TemplateError, saveAsPath} from '@drovp/save-as-path';
 import type {Payload} from './';
 
 const nativeImport = (name: string) => eval(`import('${name}')`);
@@ -16,13 +15,23 @@ const encoderExtension = {
 	svgo: 'svg',
 };
 
-export default async (payload: Payload, utils: ProcessorUtils) => {
-	const {input, options} = payload;
-	const {output} = utils;
-
+export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 	const encoder = options.encoder[input.type];
 
-	if (!encoder) throw new Error(`Unknown encoder "${encoder}".`);
+	if (!encoder) {
+		output.error(`Input type "${input.type}" not supported.`);
+		return;
+	}
+
+	// Check destination template for errors
+	try {
+		checkSaveAsPathOptions(options.saving);
+	} catch (error) {
+		if (error instanceof TemplateError) {
+			output.error(`Destination template error: ${error.message}`);
+			return;
+		}
+	}
 
 	const outputExtension = encoderExtension[encoder];
 
@@ -126,24 +135,14 @@ export default async (payload: Payload, utils: ProcessorUtils) => {
 		return;
 	}
 
-	/**
-	 * Save the output.
-	 */
-
-	const extraTokens: Record<string, string> = {encoder};
-	let destination = await saveAsPath(input.path, outputExtension, {
-		...options.saving,
-		tokenReplacer: (name) => (name in extraTokens ? extraTokens[name] || '' : undefined),
-	});
-	let destinationDirectory = Path.dirname(destination);
-	const tmpPath = `${destination}.tmp`;
-
-	// Ensure directory exists
-	await FSP.mkdir(destinationDirectory, {recursive: true});
-
-	// Write, cleanup, rename, output
+	// Save the output
+	const tmpPath = `${input.path}.tmp${Math.random().toString().slice(-6)}`;
 	await FSP.writeFile(tmpPath, outputBuffer);
-	if (options.saving.deleteOriginal) await FSP.rm(input.path, {force: true});
-	await FSP.rename(tmpPath, destination);
-	output.file(destination);
+
+	let outputPath = await saveAsPath(input.path, tmpPath, outputExtension, {
+		...options.saving,
+		extraVariables: {encoder},
+	});
+
+	output.file(outputPath);
 };
