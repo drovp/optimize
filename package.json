@@ -1,6 +1,6 @@
 {
 	"name": "@drovp/optimize",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"description": "Perceptually lossless png, jpg, svg, webp, and gif size optimization.",
 	"homepage": "https://github.com/drovp/optimize",
 	"bugs": "https://github.com/drovp/optimize/issues",
