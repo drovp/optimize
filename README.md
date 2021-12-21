@@ -1,6 +1,6 @@
-# @drovp/image-optimizer
+# @drovp/optimize
 
-[Drovp](https://drovp.app) plugin for perceptually lossless image size optimization.
+[Drovp](https://drovp.app) plugin for perceptually lossless image & SVG size optimization.
 
 Uses [imagemin](https://www.npmjs.com/package/imagemin) under the hood.
 

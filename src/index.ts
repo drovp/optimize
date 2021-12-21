@@ -1027,9 +1027,9 @@ const acceptsFlags = makeAcceptsFlags<Options>()({
 export type Payload = PayloadData<Options, typeof acceptsFlags>;
 
 export default (plugin: Plugin) => {
-	plugin.registerProcessor<Payload>('image-optimizer', {
+	plugin.registerProcessor<Payload>('optimize', {
 		main: 'dist/processor.js',
-		description: 'Perceptually lossless image size optimization.',
+		description: 'Perceptually lossless image & SVG size optimization.',
 		accepts: acceptsFlags,
 		threadType: 'cpu',
 		parallelize: true,
