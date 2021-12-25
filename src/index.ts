@@ -216,7 +216,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 80,
 				title: 'Quality',
 				description: `Compression quality, in range 0 (worst) to 100 (perfect).`,
-				hint: (value) => value,
 			},
 			{
 				name: 'progressive',
@@ -325,7 +324,7 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 0,
 				title: 'Smooth',
 				description: `Set the strength of smooth dithered input.`,
-				hint: (value) => (value === 0 ? `disabled` : value),
+				hint: (value) => (!value ? `disabled` : undefined),
 			},
 		],
 	},
@@ -364,7 +363,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 75,
 				title: 'Quality',
 				description: `Compression quality, in range 0 (worst) to 100 (perfect).`,
-				hint: (value) => value,
 				isHidden: (_, options) => options.libwebp.mode !== 'quality',
 			},
 			{
@@ -376,7 +374,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 100,
 				title: 'Alpha quality',
 				description: `Set transparency-compression quality`,
-				hint: (value) => value,
 				isHidden: (_, options) => options.libwebp.mode !== 'quality',
 			},
 			{
@@ -388,7 +385,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 4,
 				title: 'Method',
 				description: `Specify the compression method to use, between 0 (fastest) and 6 (slowest). This parameter controls the trade off between encoding speed and the compressed file size and quality.`,
-				hint: (value) => value,
 				isHidden: (_, options) => options.libwebp.mode !== 'quality',
 			},
 			{
@@ -413,7 +409,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 60,
 				title: 'Near lossless',
 				description: `Level of near-lossless image preprocessing. This option adjusts pixel values to help compressibility, but has minimal impact on the visual quality. It triggers lossless compression mode automatically. The range is <code>0</code> (maximum pre-processing) to <code>100</code> (same as lossless).`,
-				hint: (value) => value,
 				isHidden: (_, options) => options.libwebp.mode !== 'near_lossless',
 			},
 			{
@@ -433,7 +428,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 80,
 				title: 'SNS',
 				description: `Set the amplitude of spatial noise shaping between 0 and 100.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'filter',
@@ -444,7 +438,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 0,
 				title: 'Filter',
 				description: `Set deblocking filter strength between <code>0</code> (off) and <code>100</code>. Typical values are usually in the range of <code>20</code> to <code>50</code>.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'autoFilter',
@@ -462,7 +455,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 0,
 				title: 'Sharpness',
 				description: `Set filter sharpness between <code>0</code> (sharpest) and <code>7</code> (least sharp).`,
-				hint: (value) => value,
 			},
 		],
 	},
@@ -482,7 +474,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				description: `<code>1</code> (slowest) to <code>11</code> (fastest).<br>
 						Speed <code>10</code> has 5% lower quality, but is about 8 times faster than the default.<br>
 						Speed <code>11</code> disables dithering and lowers compression level.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'maxQuality',
@@ -494,7 +485,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				title: 'Max quality',
 				description: `Instructs pngquant to use the least amount of colors required to meet or exceed the max quality.<br>
 						<code>0</code> (worst) to <code>1</code> (perfect).`,
-				hint: (value) => value,
 			},
 			{
 				name: 'dithering',
@@ -505,7 +495,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 1,
 				title: 'Dithering',
 				description: `Set the dithering level using a fractional number between <code>0</code> (none) and <code>1</code> (full).`,
-				hint: (value) => value,
 			},
 			{
 				name: 'strip',
@@ -540,7 +529,6 @@ const optionsSchema: OptionsSchema<Options> = [
 							<li>240 trials</li>
 						</ol>
 						`,
-				hint: (value) => value,
 			},
 			{
 				name: 'bitDepthReduction',
@@ -592,7 +580,6 @@ const optionsSchema: OptionsSchema<Options> = [
 							<li>Try several optimization methods (usually slower, sometimes better results)</li>
 						</ol>
 						`,
-				hint: (value) => value,
 			},
 			{
 				name: 'colors',
@@ -603,7 +590,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 256,
 				title: 'Colors',
 				description: `Reduce the number of distinct colors in each output GIF.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'interlaced',
@@ -642,7 +628,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 75,
 				title: 'Quality',
 				description: `Specify the compression factor for RGB channels between <code>0</code> and <code>100</code>. In case of lossless compression, a small factor enables faster compression speed, but produces a larger file. Maximum compression is achieved by using a value of <code>100</code>. In case of lossy compression (specified by the Lossy option), a small factor produces a smaller file with lower quality. Best quality is achieved by using a value of <code>100</code>.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'method',
@@ -653,7 +638,6 @@ const optionsSchema: OptionsSchema<Options> = [
 				default: 4,
 				title: 'Method',
 				description: `Specify the compression method to use. This parameter controls the trade off between encoding speed and the compressed file size and quality. Possible values range from <code>0</code> to <code>6</code>. When higher values are used, the encoder will spend more time inspecting additional encoding possibilities and decide on the quality gain. Lower value can result in faster processing time at the expense of larger file size and lower compression quality.`,
-				hint: (value) => value,
 			},
 			{
 				name: 'minimize',
