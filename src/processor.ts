@@ -41,7 +41,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 
 	const inputBuffer = await FSP.readFile(input.path);
 	let outputBuffer;
-	let plugin;
+	let optimizer;
 
 	switch (encoder) {
 		case 'mozjpeg': {
@@ -50,7 +50,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 			if (!pluginOptions.quantTable) delete pluginOptions.quantTable;
 			if (!pluginOptions.smooth) delete pluginOptions.smooth;
 
-			plugin = require('imagemin-mozjpeg')(pluginOptions);
+			optimizer = (await nativeImport('imagemin-mozjpeg')).default(pluginOptions);
 			break;
 		}
 
@@ -76,20 +76,20 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 			const size = pluginOptions.size?.match(/[^\d]+/) ? Number(pluginOptions.size) : undefined;
 			delete pluginOptions.size;
 
-			plugin = require('imagemin-webp')({...pluginOptions, size});
+			optimizer = (await nativeImport('imagemin-webp')).default({...pluginOptions, size});
 			break;
 		}
 
 		case 'pngquant':
-			plugin = require('imagemin-pngquant')(options.pngquant);
+			optimizer = (await nativeImport('imagemin-pngquant')).default(options.pngquant);
 			break;
 
 		case 'optipng':
-			plugin = require('imagemin-optipng')(options.optipng);
+			optimizer = (await nativeImport('imagemin-optipng')).default(options.optipng);
 			break;
 
 		case 'gifsicle':
-			plugin = require('imagemin-gifsicle')(options.gifsicle);
+			optimizer = (await nativeImport('imagemin-gifsicle')).default(options.gifsicle);
 			break;
 
 		case 'gif2webp':
@@ -107,7 +107,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 
 			delete pluginOptions.mode;
 
-			plugin = require('imagemin-gif2webp')(pluginOptions);
+			optimizer = (await nativeImport('imagemin-gif2webp')).default(pluginOptions);
 			break;
 
 		case 'svgo': {
@@ -117,13 +117,12 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 				if (enabled) plugins.push(name);
 			}
 
-			plugin = (await nativeImport('imagemin-svgo')).default({plugins});
+			optimizer = (await nativeImport('imagemin-svgo')).default({plugins});
 			break;
 		}
 	}
 
-	const {default: imagemin} = await nativeImport('imagemin');
-	outputBuffer = await imagemin.buffer(inputBuffer, {plugins: [plugin]});
+	outputBuffer = await optimizer(inputBuffer);
 
 	if (!outputBuffer) {
 		console.error(`imagemin didn't produce any output.`);
