@@ -53,7 +53,7 @@
 	},
 	"dependencies": {
 		"@drovp/save-as-path": "^2.0.0",
-		"@drovp/types": "^3.0.2",
+		"@drovp/types": "^4.2.1",
 		"imagemin-gif2webp": "^3.0.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^10.0.0",

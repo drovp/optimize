@@ -134,14 +134,35 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		return;
 	}
 
-	// Save the output
+	// Save & emit the output
 	const tmpPath = `${input.path}.tmp${Math.random().toString().slice(-6)}`;
 	await FSP.writeFile(tmpPath, outputBuffer);
-
 	let outputPath = await saveAsPath(input.path, tmpPath, outputExtension, {
 		...options.saving,
 		extraVariables: {encoder},
 	});
+	const savings = ((inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength) * -1;
+	const savingsPercent = numberToPercent(savings);
 
-	output.file(outputPath);
+	output.file(outputPath, {
+		flair:
+			savings < 0
+				? {
+						variant: 'success',
+						title: savingsPercent,
+						description: `Result is ${savingsPercent} smaller than the original.`,
+				  }
+				: {
+						variant: 'danger',
+						title: `+${savingsPercent}`,
+						description: `Result is ${savingsPercent} larger than the original.`,
+				  },
+	});
 };
+
+/**
+ * Format floating point number into percentage string.
+ */
+function numberToPercent(value: number) {
+	return `${(value * 100).toFixed(Math.abs(value) > 0.01 ? 0 : 1)}%`;
+}
