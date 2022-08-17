@@ -149,6 +149,11 @@ type Options = SavingOptions & {
 
 // Options schema for the Options type above
 const optionsSchema: OptionsSchema<Options> = [
+	makeSavingOptionSchema({
+		extraVariables: {
+			encoder: `name of the encoder used to compress the file`,
+		},
+	}),
 	{
 		name: 'encoder',
 		type: 'namespace',
@@ -1017,13 +1022,6 @@ export default (plugin: Plugin) => {
 		accepts: acceptsFlags,
 		threadType: 'cpu',
 		parallelize: true,
-		options: [
-			makeSavingOptionSchema({
-				extraVariables: {
-					encoder: `name of the encoder used to compress the file`,
-				},
-			}),
-			...optionsSchema,
-		],
+		options: optionsSchema,
 	});
 };
