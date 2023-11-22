@@ -45,21 +45,21 @@
 		"postversion": "npm-run-all git-push npm-publish"
 	},
 	"devDependencies": {
-		"@types/imagemin": "^8.0.0",
+		"@types/imagemin": "^8.0.5",
 		"npm-run-all": "^4.1.5",
-		"rimraf": "^3.0.2",
-		"tslib": "^2.4.0",
-		"typescript": "^4.7.4"
+		"rimraf": "^5.0.5",
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.2"
 	},
 	"dependencies": {
 		"@drovp/save-as-path": "^3.1.0",
-		"@drovp/types": "^4.11.0",
+		"@drovp/types": "^5.2.1",
 		"imagemin-gif2webp": "^3.0.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^10.0.0",
 		"imagemin-optipng": "^8.0.0",
 		"imagemin-pngquant": "^9.0.2",
-		"imagemin-svgo": "^10.0.0",
-		"imagemin-webp": "^7.0.0"
+		"imagemin-svgo": "^10.0.1",
+		"imagemin-webp": "^8.0.0"
 	}
 }
