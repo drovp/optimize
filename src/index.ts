@@ -34,6 +34,7 @@ type Options = SavingOptions & {
 		svg: 'svgo';
 		[x: string]: Encoder;
 	};
+	minSavings: number;
 	encoderCategory: Encoder;
 	mozjpeg: {
 		quality: number;
@@ -196,6 +197,17 @@ const optionsSchema: OptionsSchema<Options> = [
 				title: 'SVG',
 			},
 		],
+	},
+	{
+		name: 'minSavings',
+		type: 'number',
+		min: 0,
+		max: 99,
+		step: 1,
+		default: 0,
+		title: 'Min savings',
+		description: `Require that the output is at least this much smaller than the original. If the output doesn't satisfy this, it'll be discarded, and the original emitted as a result.`,
+		hint: '%',
 	},
 	{
 		type: 'divider',

@@ -1,5 +1,5 @@
 import {promises as FSP} from 'fs';
-import type {ProcessorUtils} from '@drovp/types';
+import type {ProcessorUtils, Flair} from '@drovp/types';
 import {checkSaveAsPathOptions, TemplateError, saveAsPath} from '@drovp/save-as-path';
 import type {Payload} from './';
 
@@ -134,18 +134,27 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		return;
 	}
 
-	// Save & emit the output
-	const tmpPath = `${input.path}.tmp${Math.random().toString().slice(-6)}`;
-	await FSP.writeFile(tmpPath, outputBuffer);
-	let outputPath = await saveAsPath(input.path, tmpPath, outputExtension, {
-		...options.saving,
-		extraVariables: {encoder},
-	});
 	const savings = ((inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength) * -1;
 	const savingsPercent = numberToPercent(savings);
+	let outputPath: string;
+	let flair: Flair;
 
-	output.file(outputPath, {
-		flair:
+	if (options.minSavings > 0 && savings < options.minSavings / 100) {
+		outputPath = input.path;
+		flair = {
+			variant: 'warning',
+			title: `+${savingsPercent}`,
+			description: `File reverted as savings didn't reach ${options.minSavings}%.`,
+		};
+	} else {
+		// Save & emit the output
+		const tmpPath = `${input.path}.tmp${Math.random().toString().slice(-6)}`;
+		await FSP.writeFile(tmpPath, outputBuffer);
+		outputPath = await saveAsPath(input.path, tmpPath, outputExtension, {
+			...options.saving,
+			extraVariables: {encoder},
+		});
+		flair =
 			savings < 0
 				? {
 						variant: 'success',
@@ -156,8 +165,10 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 						variant: 'danger',
 						title: `+${savingsPercent}`,
 						description: `Result is ${savingsPercent} larger than the original.`,
-				  },
-	});
+				  };
+	}
+
+	output.file(outputPath, {flair});
 };
 
 /**
