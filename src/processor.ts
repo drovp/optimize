@@ -143,7 +143,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		outputPath = input.path;
 		flair = {
 			variant: 'warning',
-			title: `+${savingsPercent}`,
+			title: `reverted`,
 			description: `File reverted as savings didn't reach ${options.minSavings}%.`,
 		};
 	} else {
