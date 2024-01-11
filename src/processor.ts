@@ -134,8 +134,8 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		return;
 	}
 
-	const savings = ((inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength);
-	const savingsPercent = numberToPercent(savings);
+	const savings = (inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength;
+	const savingsPercent = (savings > 0 ? '-' : '+') + numberToPercent(Math.abs(savings));
 	let outputPath: string;
 	let flair: Flair;
 
@@ -144,7 +144,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		flair = {
 			variant: 'warning',
 			title: `reverted`,
-			description: `File reverted as savings of ${savings}% didn't reach required ${options.minSavings}%.`,
+			description: `File reverted as savings didn't reach required -${options.minSavings}%. Result was ${savingsPercent} bigger than the original.`,
 		};
 	} else {
 		// Save & emit the output
@@ -155,7 +155,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 			extraVariables: {encoder},
 		});
 		flair =
-			savings < 0
+			savings > 0
 				? {
 						variant: 'success',
 						title: savingsPercent,
@@ -163,7 +163,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 				  }
 				: {
 						variant: 'danger',
-						title: `+${savingsPercent}`,
+						title: savingsPercent,
 						description: `Result is ${savingsPercent} larger than the original.`,
 				  };
 	}
