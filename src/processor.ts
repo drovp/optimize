@@ -134,7 +134,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		return;
 	}
 
-	const savings = ((inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength) * -1;
+	const savings = ((inputBuffer.byteLength - outputBuffer.byteLength) / inputBuffer.byteLength);
 	const savingsPercent = numberToPercent(savings);
 	let outputPath: string;
 	let flair: Flair;
@@ -144,7 +144,7 @@ export default async ({input, options}: Payload, {output}: ProcessorUtils) => {
 		flair = {
 			variant: 'warning',
 			title: `reverted`,
-			description: `File reverted as savings didn't reach ${options.minSavings}%.`,
+			description: `File reverted as savings of ${savings}% didn't reach required ${options.minSavings}%.`,
 		};
 	} else {
 		// Save & emit the output
